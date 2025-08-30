@@ -1,0 +1,47 @@
+# Environment variables and secrets
+.env
+.env.secure
+.env.local
+.env.production
+.env.development
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Runtime files
+*.log
+npm-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Private keys and wallets (extra protection)
+*.key
+wallet.json
+keypair.json
+
+# BACKUP DIRECTORIES (CRITICAL SECURITY)
+../BACKUPS/
+../../BACKUPS/
+**/BACKUPS/
+backup*/
+*.backup
+*backup*
+
+# Additional security exclusions
+private/
+secrets/
+keys/

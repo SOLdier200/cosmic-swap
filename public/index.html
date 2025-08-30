@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solitics - Solana DeFi Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .space-bg {
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 35%, #0f3460 100%);
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+        
+        .star:nth-child(1) { top: 20%; left: 20%; width: 2px; height: 2px; animation-delay: 0s; }
+        .star:nth-child(2) { top: 60%; left: 30%; width: 1px; height: 1px; animation-delay: 0.5s; }
+        .star:nth-child(3) { top: 10%; left: 80%; width: 3px; height: 3px; animation-delay: 1s; }
+        .star:nth-child(4) { top: 80%; left: 10%; width: 1px; height: 1px; animation-delay: 1.5s; }
+        .star:nth-child(5) { top: 30%; left: 70%; width: 2px; height: 2px; animation-delay: 0.2s; }
+        .star:nth-child(6) { top: 90%; left: 50%; width: 1px; height: 1px; animation-delay: 0.7s; }
+        .star:nth-child(7) { top: 50%; left: 90%; width: 2px; height: 2px; animation-delay: 1.2s; }
+        .star:nth-child(8) { top: 15%; left: 40%; width: 1px; height: 1px; animation-delay: 0.3s; }
+        .star:nth-child(9) { top: 70%; left: 60%; width: 3px; height: 3px; animation-delay: 0.8s; }
+        .star:nth-child(10) { top: 40%; left: 15%; width: 1px; height: 1px; animation-delay: 1.3s; }
+        .star:nth-child(11) { top: 25%; left: 55%; width: 2px; height: 2px; animation-delay: 0.6s; }
+        .star:nth-child(12) { top: 85%; left: 75%; width: 1px; height: 1px; animation-delay: 1.1s; }
+        .star:nth-child(13) { top: 5%; left: 65%; width: 2px; height: 2px; animation-delay: 0.4s; }
+        .star:nth-child(14) { top: 65%; left: 85%; width: 1px; height: 1px; animation-delay: 0.9s; }
+        .star:nth-child(15) { top: 45%; left: 25%; width: 3px; height: 3px; animation-delay: 1.4s; }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.5; transform: scale(1); }
+        }
+        
+        .nebula {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(120, 81, 169, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 162, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 80%, rgba(139, 69, 19, 0.1) 0%, transparent 50%);
+            z-index: 2;
+            animation: nebula-drift 20s ease-in-out infinite alternate;
+        }
+        
+        @keyframes nebula-drift {
+            0% { transform: translateX(-10px) translateY(-5px); }
+            100% { transform: translateX(10px) translateY(5px); }
+        }
+        
+        .content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .glass-effect {
+            background: rgba(15, 25, 50, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(0, 100, 200, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .swap-container {
+            background: linear-gradient(145deg, rgba(15, 25, 50, 0.95) 0%, rgba(25, 35, 60, 0.9) 100%);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            box-shadow: 
+                0 20px 60px rgba(0, 50, 150, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .token-select {
+            background: rgba(20, 30, 55, 0.8);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .token-select:hover {
+            background: rgba(30, 40, 70, 0.9);
+            border-color: rgba(120, 220, 255, 0.4);
+            box-shadow: 0 5px 20px rgba(0, 100, 255, 0.2);
+        }
+        
+        .swap-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .swap-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(102, 126, 234, 0.6);
+            background: linear-gradient(135deg, #7c8ee8 0%, #8a5cb8 50%, #f2a3fc 100%);
+        }
+        
+        .swap-button:disabled {
+            background: linear-gradient(135deg, #4a4a4a 0%, #666 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .connect-button {
+            background: linear-gradient(135deg, #a855f7 0%, #3b82f6 50%, #06b6d4 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 25px rgba(168, 85, 247, 0.4);
+        }
+        
+        .connect-button:hover {
+            background: linear-gradient(135deg, #c084fc 0%, #60a5fa 50%, #22d3ee 100%);
+            box-shadow: 0 10px 35px rgba(168, 85, 247, 0.6);
+        }
+        
+        .simulate-button {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
+        }
+        
+        .simulate-button:hover {
+            background: linear-gradient(135deg, #22d3ee 0%, #60a5fa 100%);
+            box-shadow: 0 6px 25px rgba(6, 182, 212, 0.5);
+        }
+        
+        .text-cosmic {
+            color: #e2e8f0;
+            text-shadow: 0 0 10px rgba(226, 232, 240, 0.3);
+        }
+        
+        .text-cosmic-bright {
+            color: #f8fafc;
+            text-shadow: 0 0 15px rgba(248, 250, 252, 0.4);
+            font-weight: 600;
+        }
+        
+        .text-cosmic-accent {
+            color: #60a5fa;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+        }
+        
+        .text-cosmic-success {
+            color: #34d399;
+            text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+        }
+        
+        .balance-card {
+            background: rgba(10, 20, 40, 0.7);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        input[type="number"] {
+            color: #f8fafc !important;
+            text-shadow: 0 0 5px rgba(248, 250, 252, 0.3);
+            font-weight: 600;
+        }
+        
+        input[type="number"]::placeholder {
+            color: rgba(148, 163, 184, 0.6) !important;
+        }
+        
+        .slippage-button {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+        }
+        
+        .slippage-button:hover {
+            border-color: rgba(120, 220, 255, 0.4);
+            box-shadow: 0 2px 10px rgba(0, 100, 255, 0.2);
+        }
+        
+        .status-card {
+            background: rgba(10, 20, 40, 0.8);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            backdrop-filter: blur(15px);
+        }
+        
+        .price-positive {
+            color: #10b981;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        
+        .price-negative {
+            color: #ef4444;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+        
+        .price-neutral {
+            color: #94a3b8;
+            text-shadow: 0 0 10px rgba(148, 163, 184, 0.3);
+        }
+        
+        /* Solitics Header Styles */
+        .solitics-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(15, 25, 50, 0.95) 0%, rgba(25, 35, 60, 0.9) 100%);
+            backdrop-filter: blur(25px);
+            border-bottom: 2px solid rgba(147, 51, 234, 0.4);
+            box-shadow: 0 4px 30px rgba(147, 51, 234, 0.2);
+            padding: 1rem 0;
+        }
+        
+        .solitics-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .solitics-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .solitics-logo {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #6d28d9 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 0 20px rgba(168, 85, 247, 0.6),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            animation: logo-glow 3s ease-in-out infinite alternate;
+        }
+        
+        .solitics-logo::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #a855f7, #7c3aed, #6d28d9, #a855f7);
+            border-radius: 50%;
+            z-index: -1;
+            animation: logo-border 4s linear infinite;
+        }
+        
+        .solitics-s {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 900;
+            font-family: 'Arial Black', sans-serif;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 2px 4px rgba(0, 0, 0, 0.3);
+            transform: scaleX(0.9);
+        }
+        
+        @keyframes logo-glow {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(168, 85, 247, 0.6),
+                    inset 0 0 20px rgba(255, 255, 255, 0.1);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 40px rgba(168, 85, 247, 0.9),
+                    inset 0 0 30px rgba(255, 255, 255, 0.2);
+            }
+        }
+        
+        @keyframes logo-border {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .solitics-title {
+            color: #f8fafc;
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-shadow: 
+                0 0 20px rgba(168, 85, 247, 0.8),
+                0 4px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.02em;
+        }
+        
+        .solitics-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            text-shadow: 0 0 5px rgba(226, 232, 240, 0.3);
+        }
+        
+        .nav-link:hover {
+            color: #a855f7;
+            background: rgba(168, 85, 247, 0.1);
+            text-shadow: 0 0 15px rgba(168, 85, 247, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            color: #a855f7;
+            background: rgba(168, 85, 247, 0.2);
+            text-shadow: 0 0 15px rgba(168, 85, 247, 0.8);
+        }
+        
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown-content {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(15, 25, 50, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 0.5rem;
+            padding: 0.5rem 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-dropdown:hover .nav-dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .nav-dropdown-item {
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-dropdown-item:hover {
+            background: rgba(168, 85, 247, 0.1);
+            color: #a855f7;
+        }
+        
+        .nav-dropdown-item.coming-soon {
+            color: #94a3b8;
+            font-style: italic;
+        }
+        
+        .nav-dropdown-item.coming-soon:hover {
+            background: rgba(148, 163, 184, 0.1);
+            color: #cbd5e1;
+        }
+        
+        /* Main content adjustment for fixed header */
+        .main-content {
+            padding-top: 120px;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .solitics-container {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .solitics-title {
+                font-size: 1.8rem;
+            }
+            
+            .solitics-nav {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-link {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .main-content {
+                padding-top: 140px;
+            }
+        }
+    </style>
+</head>
+<body class="space-bg min-h-screen">
+    <!-- Animated stars background -->
+    <div class="stars">
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+    </div>
+    
+    <!-- Nebula effects -->
+    <div class="nebula"></div>
+    
+    <!-- Solitics Header -->
+    <header class="solitics-header">
+        <div class="solitics-container">
+            <div class="solitics-logo-container">
+                <div class="solitics-logo">
+                    <span class="solitics-s">S</span>
+                </div>
+                <h1 class="solitics-title">Solitics</h1>
+            </div>
+            
+            <nav class="solitics-nav">
+                <a href="#wallet" class="nav-link active" onclick="showSection('wallet')">Wallet</a>
+                <a href="#swap" class="nav-link" onclick="showSection('swap')">Swap</a>
+                <a href="#pools" class="nav-link" onclick="showSection('pools')">Pools</a>
+                <div class="nav-dropdown">
+                    <a href="#news" class="nav-link" onclick="showSection('news')">News</a>
+                    <div class="nav-dropdown-content">
+                        <a href="#podcast" class="nav-dropdown-item coming-soon">Solitics Podcast<br><small>(Coming Soon)</small></a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <div id="root" class="content main-content min-h-screen flex items-center justify-center p-4">
+        <!-- React app will be mounted here -->
+        <div class="text-center text-cosmic">
+            <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+            <p>Loading Solana Swap...</p>
+        </div>
+    </div>
+
+    <!-- React and other dependencies - Latest versions -->
+    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.23.5/babel.min.js"></script>
+    <script src="https://unpkg.com/@solana/web3.js@1.87.6/lib/index.iife.min.js"></script>
+    
+    <!-- Main App Script -->
+    <script type="text/babel">
+        // Simple console error suppression for Phantom extension
+        const originalConsoleError = console.error;
+        console.error = function(...args) {
+            const message = args.join(' ');
+            if (message.includes('Could not establish connection') || 
+                message.includes('Receiving end does not exist') ||
+                message.includes('[PHANTOM]')) {
+                return;
+            }
+            originalConsoleError.apply(console, args);
+        };
+        
+        const originalConsoleWarn = console.warn;
+        console.warn = function(...args) {
+            const message = args.join(' ');
+            if (message.includes('Components object is deprecated')) {
+                return;
+            }
+            originalConsoleWarn.apply(console, args);
+        };
+        
+        const { useState, useEffect, useCallback, createContext, useContext } = React;
+
+        // Token list with CoinGecko IDs for real price data
+        const TOKENS = {
+            SOL: {
+                mint: 'So11111111111111111111111111111111111111112',
+                symbol: 'SOL',
+                name: 'Solana',
+                decimals: 9,
+                logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
+                coingeckoId: 'solana'
+            },
+            USDC: {
+                mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+                symbol: 'USDC',
+                name: 'USD Coin',
+                decimals: 6,
+                logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
+                coingeckoId: 'usd-coin'
+            },
+            RAY: {
+                mint: '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R',
+                symbol: 'RAY',
+                name: 'Raydium',
+                decimals: 6,
+                logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R/logo.png',
+                coingeckoId: 'raydium'
+            },
+            USDT: {
+                mint: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+                symbol: 'USDT',
+                name: 'Tether USD',
+                decimals: 6,
+                logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg',
+                coingeckoId: 'tether'
+            }
+        };
+
+        // Create Global Price Context
+        const PriceContext = createContext();
+
+        // Price Provider Component
+        function PriceProvider({ children }) {
+            const [prices, setPrices] = useState({});
+            const [priceChanges, setPriceChanges] = useState({});
+            const [isLoadingPrices, setIsLoadingPrices] = useState(false);
+
+            // Fetch real-time prices from CoinGecko
+            const fetchRealPrices = useCallback(async () => {
+                setIsLoadingPrices(true);
+                try {
+                    const coinIds = Object.values(TOKENS).map(token => token.coingeckoId).join(',');
+                    
+                    const response = await fetch(
+                        `https://api.coingecko.com/api/v3/simple/price?ids=${coinIds}&vs_currencies=usd&include_24hr_change=true`,
+                        {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                            }
+                        }
+                    );
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    const newPrices = {};
+                    const newPriceChanges = {};
+                    
+                    Object.entries(TOKENS).forEach(([symbol, token]) => {
+                        const priceData = data[token.coingeckoId];
+                        if (priceData) {
+                            newPrices[symbol] = priceData.usd;
+                            newPriceChanges[symbol] = priceData.usd_24h_change;
+                        }
+                    });
+
+                    setPrices(newPrices);
+                    setPriceChanges(newPriceChanges);
+                    
+                } catch (error) {
+                    console.error('Error fetching prices:', error);
+                    // Fallback to Jupiter price API if CoinGecko fails
+                    try {
+                        await fetchJupiterPrices();
+                    } catch (jupiterError) {
+                        console.error('Error fetching Jupiter prices:', jupiterError);
+                    }
+                } finally {
+                    setIsLoadingPrices(false);
+                }
+            }, []);
+
+            // Fallback to Jupiter Price API
+            const fetchJupiterPrices = useCallback(async () => {
+                try {
+                    const tokens = Object.values(TOKENS).map(token => token.mint).join(',');
+                    const response = await fetch(`https://price.jup.ag/v4/price?ids=${tokens}`);
+                    const data = await response.json();
+                    
+                    const newPrices = {};
+                    Object.entries(TOKENS).forEach(([symbol, token]) => {
+                        const priceData = data.data[token.mint];
+                        if (priceData) {
+                            newPrices[symbol] = priceData.price;
+                        }
+                    });
+                    
+                    setPrices(newPrices);
+                } catch (error) {
+                    console.error('Jupiter price fetch failed:', error);
+                }
+            }, []);
+
+            // Calculate exchange rate between two tokens
+            const getExchangeRate = useCallback((fromSymbol, toSymbol) => {
+                if (!prices[fromSymbol] || !prices[toSymbol]) return 0;
+                return prices[fromSymbol] / prices[toSymbol];
+            }, [prices]);
+
+            // Calculate USD value for token amount
+            const getUSDValue = useCallback((symbol, amount) => {
+                if (!prices[symbol] || !amount) return 0;
+                return parseFloat(amount) * prices[symbol];
+            }, [prices]);
+
+            // Fetch prices on mount and set up interval
+            useEffect(() => {
+                fetchRealPrices();
+                
+                // Update prices every 30 seconds
+                const interval = setInterval(fetchRealPrices, 30000);
+                
+                return () => clearInterval(interval);
+            }, [fetchRealPrices]);
+
+            const priceContextValue = {
+                prices,
+                priceChanges,
+                isLoadingPrices,
+                getExchangeRate,
+                getUSDValue,
+                refreshPrices: fetchRealPrices
+            };
+
+            return (
+                <PriceContext.Provider value={priceContextValue}>
+                    {children}
+                </PriceContext.Provider>
+            );
+        }
+
+        // Hook to use price context
+        function usePrices() {
+            const context = useContext(PriceContext);
+            if (!context) {
+                throw new Error('usePrices must be used within PriceProvider');
+            }
+            return context;
+        }
+
+        // Create Global Wallet Context
+        const WalletContext = createContext();
+
+        // Global Wallet Provider Component
+        function WalletProvider({ children }) {
+            const [wallet, setWallet] = useState(null);
+            const [isConnecting, setIsConnecting] = useState(false);
+            const [tokenBalances, setTokenBalances] = useState({});
+            const [status, setStatus] = useState('');
+
+            const connectWallet = useCallback(async () => {
+                setIsConnecting(true);
+                try {
+                    if (window.solana && window.solana.isPhantom) {
+                        const response = await window.solana.connect();
+                        if (response && response.publicKey) {
+                            setWallet(response.publicKey.toString());
+                            setStatus('Wallet connected successfully!');
+                            await getTokenBalances(response.publicKey.toString());
+                            localStorage.setItem('walletConnected', 'true');
+                            localStorage.setItem('walletAddress', response.publicKey.toString());
+                        } else {
+                            throw new Error('Failed to get wallet public key');
+                        }
+                    } else {
+                        setStatus('Phantom wallet not found. Please install it first.');
+                        window.open('https://phantom.app/', '_blank');
+                    }
+                } catch (error) {
+                    console.error('Error connecting wallet:', error);
+                    if (error.message?.includes('User rejected')) {
+                        setStatus('Connection cancelled by user');
+                    } else {
+                        setStatus('Failed to connect wallet. Please try again.');
+                    }
+                } finally {
+                    setIsConnecting(false);
+                }
+            }, []);
+
+            const disconnectWallet = useCallback(() => {
+                setWallet(null);
+                setTokenBalances({});
+                setStatus('Wallet disconnected');
+                localStorage.removeItem('walletConnected');
+                localStorage.removeItem('walletAddress');
+            }, []);
+
+            useEffect(() => {
+                const checkWalletConnection = async () => {
+                    try {
+                        const wasConnected = localStorage.getItem('walletConnected');
+                        const savedAddress = localStorage.getItem('walletAddress');
+                        
+                        if (wasConnected && savedAddress && window.solana && window.solana.isPhantom) {
+                            try {
+                                await new Promise(resolve => setTimeout(resolve, 1000));
+                                const response = await window.solana.connect({ onlyIfTrusted: true });
+                                
+                                if (response && response.publicKey && response.publicKey.toString() === savedAddress) {
+                                    setWallet(response.publicKey.toString());
+                                    setStatus('Wallet reconnected successfully');
+                                    await getTokenBalances(response.publicKey.toString());
+                                }
+                            } catch (error) {
+                                if (!error.message?.includes('User rejected')) {
+                                    console.log('Auto-reconnect not available - user needs to connect manually');
+                                }
+                                localStorage.removeItem('walletConnected');
+                                localStorage.removeItem('walletAddress');
+                            }
+                        }
+                    } catch (error) {
+                        console.log('Wallet connection check completed');
+                    }
+                };
+
+                if (document.readyState === 'complete') {
+                    checkWalletConnection();
+                } else {
+                    window.addEventListener('load', checkWalletConnection);
+                    return () => window.removeEventListener('load', checkWalletConnection);
+                }
+            }, []);
+
+            const getTokenBalances = async (walletAddress) => {
+                try {
+                    const balances = {};
+                    
+                    const solResponse = await fetch('/api/balance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ wallet: walletAddress })
+                    });
+                    const solData = await solResponse.json();
+                    balances['SOL'] = { ...TOKENS.SOL, balance: solData.balance };
+                    
+                    for (const [symbol, token] of Object.entries(TOKENS)) {
+                        if (symbol !== 'SOL') {
+                            try {
+                                const response = await fetch('/api/token-balance', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ 
+                                        wallet: walletAddress, 
+                                        mint: token.mint 
+                                    })
+                                });
+                                const data = await response.json();
+                                balances[symbol] = { ...token, balance: data.balance || '0.00' };
+                            } catch (error) {
+                                console.error(`Error getting ${symbol} balance:`, error);
+                                balances[symbol] = { ...token, balance: '0.00' };
+                            }
+                        }
+                    }
+                    
+                    setTokenBalances(balances);
+                } catch (error) {
+                    console.error('Error getting balances:', error);
+                }
+            };
+
+            const walletContextValue = {
+                wallet,
+                isConnecting,
+                tokenBalances,
+                status,
+                setStatus,
+                connectWallet,
+                disconnectWallet,
+                getTokenBalances
+            };
+
+            return (
+                <WalletContext.Provider value={walletContextValue}>
+                    {children}
+                </WalletContext.Provider>
+            );
+        }
+
+        // Hook to use wallet context
+        function useWallet() {
+            const context = useContext(WalletContext);
+            if (!context) {
+                throw new Error('useWallet must be used within WalletProvider');
+            }
+            return context;
+        }
+
+        // Price Display Component
+        function PriceDisplay({ symbol, showChange = true, className = "" }) {
+            const { prices, priceChanges, isLoadingPrices } = usePrices();
+            
+            if (isLoadingPrices && !prices[symbol]) {
+                return (
+                    <div className={`${className}`}>
+                        <i className="fas fa-spinner fa-spin text-cosmic-accent"></i>
+                    </div>
+                );
+            }
+            
+            const price = prices[symbol];
+            const change = priceChanges[symbol];
+            
+            if (!price) return <span className={`text-cosmic ${className}`}>--</span>;
+            
+            const changeClass = change > 0 ? 'price-positive' : change < 0 ? 'price-negative' : 'price-neutral';
+            
+            return (
+                <div className={className}>
+                    <span className="text-cosmic-bright">
+                        ${price >= 1 ? price.toFixed(2) : price.toFixed(6)}
+                    </span>
+                    {showChange && change !== undefined && (
+                        <span className={`ml-2 text-xs ${changeClass}`}>
+                            {change > 0 ? '+' : ''}{change.toFixed(2)}%
+                        </span>
+                    )}
+                </div>
+            );
+        }
+
+        // Main App Component with Navigation
+        function App() {
+            const [currentSection, setCurrentSection] = useState('wallet');
+
+            const showSection = (sectionName) => {
+                setCurrentSection(sectionName);
+                
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                const targetLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+                if (targetLink) {
+                    targetLink.classList.add('active');
+                }
+            };
+
+            useEffect(() => {
+                window.showSection = showSection;
+            }, []);
+
+            const renderCurrentSection = () => {
+                switch(currentSection) {
+                    case 'wallet':
+                        return <WalletSection />;
+                    case 'swap':
+                        return <SwapSection />;
+                    case 'pools':
+                        return <PoolsSection />;
+                    case 'news':
+                        return <NewsSection />;
+                    default:
+                        return <WalletSection />;
+                }
+            };
+
+            return (
+                <PriceProvider>
+                    <WalletProvider>
+                        {renderCurrentSection()}
+                    </WalletProvider>
+                </PriceProvider>
+            );
+        }
+
+        // Wallet Connection Component (reusable across sections)
+        function WalletConnection() {
+            const { wallet, isConnecting, connectWallet, disconnectWallet, status, setStatus } = useWallet();
+
+            if (!wallet) {
+                return (
+                    <div className="glass-effect rounded-2xl p-6 text-center mb-6">
+                        <button
+                            onClick={connectWallet}
+                            disabled={isConnecting}
+                            className="connect-button px-8 py-4 text-cosmic-bright font-semibold rounded-xl"
+                        >
+                            {isConnecting ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                                    Connecting...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-wallet mr-2"></i>
+                                    Connect Phantom Wallet
+                                </>
+                            )}
+                        </button>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="balance-card rounded-xl p-4 mb-6">
+                    <div className="text-center mb-3">
+                        <p className="text-cosmic-success text-sm mb-1">
+                            <i className="fas fa-check-circle mr-1"></i>
+                            Wallet Connected
+                        </p>
+                        <div className="flex items-center justify-center space-x-2 mb-2">
+                            <p className="text-cosmic text-xs font-mono">
+                                {wallet.slice(0, 8)}...{wallet.slice(-8)}
+                            </p>
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(wallet);
+                                    setStatus('Wallet address copied to clipboard!');
+                                    setTimeout(() => setStatus(''), 3000);
+                                }}
+                                className="text-cosmic-accent hover:text-cosmic-bright transition-colors p-1 rounded"
+                                title="Copy wallet address"
+                            >
+                                <i className="fas fa-copy text-sm"></i>
+                            </button>
+                            <button
+                                onClick={disconnectWallet}
+                                className="text-red-400 hover:text-red-300 transition-colors p-1 rounded"
+                                title="Disconnect wallet"
+                            >
+                                <i className="fas fa-sign-out-alt text-sm"></i>
+                            </button>
+                        </div>
+                        <p className="text-cosmic text-xs opacity-75">Click copy to receive payments</p>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Wallet Section Component
+        function WalletSection() {
+            const { wallet, tokenBalances } = useWallet();
+            const { getUSDValue } = usePrices();
+
+            return (
+                <div className="max-w-2xl w-full">
+                    <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold text-cosmic-bright mb-2">
+                            <i className="fas fa-wallet mr-3"></i>
+                            Wallet Overview
+                        </h2>
+                        <p className="text-cosmic-accent">Manage your Solana tokens</p>
+                    </div>
+
+                    <WalletConnection />
+
+                    {wallet && (
+                        <div className="glass-effect rounded-2xl p-6">
+                            <h3 className="text-xl text-cosmic-bright font-bold mb-4 text-center">
+                                Token Holdings
+                            </h3>
+                            
+                            <div className="space-y-3">
+                                {Object.entries(tokenBalances).map(([symbol, token]) => {
+                                    const usdValue = getUSDValue(symbol, token.balance);
+                                    return (
+                                        <div key={symbol} className="token-select rounded-xl p-4 hover:bg-opacity-80 cursor-pointer transition-all">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center">
+                                                    <img 
+                                                        src={token.logoURI} 
+                                                        alt={symbol}
+                                                        className="w-10 h-10 rounded-full mr-4"
+                                                    />
+                                                    <div>
+                                                        <p className="text-cosmic-bright font-bold">{symbol}</p>
+                                                        <div className="flex items-center space-x-2">
+                                                            <p className="text-cosmic text-sm">{token.name}</p>
+                                                            <PriceDisplay symbol={symbol} showChange={true} className="text-xs" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="text-cosmic-bright text-lg font-bold">
+                                                        {token.balance || '0.00'}
+                                                    </p>
+                                                    {usdValue > 0 && (
+                                                        <p className="text-cosmic-accent text-sm">
+                                                            ${usdValue.toFixed(2)}
+                                                        </p>
+                                                    )}
+                                                    <div className="space-x-2 mt-2">
+                                                        <button className="bg-green-600 hover:bg-green-500 text-white text-xs px-3 py-1 rounded">
+                                                            Send
+                                                        </button>
+                                                        <button className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1 rounded">
+                                                            Receive
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    <StatusDisplay />
+                </div>
+            );
+        }
+
+        // Status Display Component
+        function StatusDisplay() {
+            const { status } = useWallet();
+            
+            if (!status) return null;
+            
+            return (
+                <div className="mt-4 p-3 status-card rounded-lg">
+                    <p className="text-sm text-center text-cosmic">{status}</p>
+                </div>
+            );
+        }
+        
+        // Enhanced Swap Section Component with Real Prices
+        function SwapSection() {
+            const { wallet, tokenBalances, getTokenBalances } = useWallet();
+            const { prices, getExchangeRate, getUSDValue } = usePrices();
+            const [fromToken, setFromToken] = useState(TOKENS.SOL);
+            const [toToken, setToToken] = useState(TOKENS.USDC);
+            const [fromAmount, setFromAmount] = useState('');
+            const [toAmount, setToAmount] = useState('');
+            const [isSwapping, setIsSwapping] = useState(false);
+            const [isSimulating, setIsSimulating] = useState(false);
+            const [slippage, setSlippage] = useState(0.5);
+            const { status, setStatus } = useWallet();
+
+            const getCurrentBalance = (tokenSymbol) => {
+                return tokenBalances[tokenSymbol]?.balance || '0.00';
+            };
+
+            // Calculate real-time conversion using market prices
+            const calculateRealTimeConversion = useCallback((amount, fromSym, toSym) => {
+                if (!amount || !prices[fromSym] || !prices[toSym]) return '';
+                
+                const rate = getExchangeRate(fromSym, toSym);
+                const result = parseFloat(amount) * rate;
+                return result.toFixed(6);
+            }, [prices, getExchangeRate]);
+
+            // Update toAmount when fromAmount changes (real-time calculation)
+            useEffect(() => {
+                if (fromAmount && prices[fromToken.symbol] && prices[toToken.symbol]) {
+                    const convertedAmount = calculateRealTimeConversion(fromAmount, fromToken.symbol, toToken.symbol);
+                    setToAmount(convertedAmount);
+                }
+            }, [fromAmount, fromToken.symbol, toToken.symbol, calculateRealTimeConversion, prices]);
+
+            const simulateSwap = async () => {
+                if (!fromAmount || !wallet) return;
+
+                setIsSimulating(true);
+                setStatus('Getting Jupiter quote for precise swap rate...');
+                
+                try {
+                    const amountInLamports = Math.floor(parseFloat(fromAmount) * Math.pow(10, fromToken.decimals));
+                    const slippageBps = Math.floor(slippage * 100);
+                    
+                    const quoteResponse = await fetch(`https://quote-api.jup.ag/v6/quote?inputMint=${fromToken.mint}&outputMint=${toToken.mint}&amount=${amountInLamports}&slippageBps=${slippageBps}`);
+                    const quote = await quoteResponse.json();
+                    
+                    if (quote && !quote.error) {
+                        const outputAmount = parseFloat(quote.outAmount) / Math.pow(10, toToken.decimals);
+                        setToAmount(outputAmount.toFixed(6));
+                        setStatus(`Jupiter quote: ${outputAmount.toFixed(6)} ${toToken.symbol} (includes ${slippage}% slippage)`);
+                    } else {
+                        setStatus(`Quote failed: ${quote?.error || 'Unknown error'}`);
+                        // Fall back to market price calculation
+                        const marketRate = calculateRealTimeConversion(fromAmount, fromToken.symbol, toToken.symbol);
+                        if (marketRate) {
+                            setToAmount(marketRate);
+                            setStatus(`Using market rate: ${marketRate} ${toToken.symbol} (market price estimation)`);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Simulation error:', error);
+                    setStatus('Quote failed - showing market rate estimation');
+                    const marketRate = calculateRealTimeConversion(fromAmount, fromToken.symbol, toToken.symbol);
+                    if (marketRate) {
+                        setToAmount(marketRate);
+                    }
+                } finally {
+                    setIsSimulating(false);
+                }
+            };
+
+            const executeSwap = async () => {
+                if (!fromAmount || !wallet) return;
+
+                setIsSwapping(true);
+                setStatus('Preparing swap transaction...');
+                
+                try {
+                    const amountInLamports = Math.floor(parseFloat(fromAmount) * Math.pow(10, fromToken.decimals));
+                    const slippageBps = Math.floor(slippage * 100);
+                    
+                    setStatus('Getting Jupiter quote...');
+                    const quoteResponse = await fetch(`https://quote-api.jup.ag/v6/quote?inputMint=${fromToken.mint}&outputMint=${toToken.mint}&amount=${amountInLamports}&slippageBps=${slippageBps}`);
+                    const quote = await quoteResponse.json();
+                    
+                    if (!quote || quote.error) {
+                        throw new Error(quote?.error || 'Failed to get quote');
+                    }
+                    
+                    setStatus('Creating swap transaction...');
+                    const swapResponse = await fetch('https://quote-api.jup.ag/v6/swap', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            quoteResponse: quote,
+                            userPublicKey: wallet,
+                            wrapAndUnwrapSol: true,
+                            useSharedAccounts: true,
+                            computeUnitPriceMicroLamports: 'auto'
+                        })
+                    });
+                    
+                    const swapData = await swapResponse.json();
+                    if (!swapData.swapTransaction) {
+                        throw new Error('Failed to create swap transaction');
+                    }
+                    
+                    setStatus('Please approve the transaction in Phantom...');
+                    
+                    const swapTransactionBuf = Uint8Array.from(atob(swapData.swapTransaction), c => c.charCodeAt(0));
+                    const transaction = solanaWeb3.VersionedTransaction.deserialize(swapTransactionBuf);
+                    
+                    const signature = await window.solana.signAndSendTransaction(transaction);
+                    
+                    setStatus('Transaction submitted! Confirming...');
+                    console.log('Transaction signature:', signature.signature);
+                    
+                    const connection = new solanaWeb3.Connection(
+                        'https://mainnet.helius-rpc.com/?api-key=3b3b4c9d-a5cb-4f68-9894-a95f678d8a0e',
+                        {
+                            commitment: 'confirmed',
+                            wsEndpoint: 'wss://mainnet.helius-rpc.com/?api-key=3b3b4c9d-a5cb-4f68-9894-a95f678d8a0e',
+                            confirmTransactionInitialTimeout: 60000,
+                            disableRetryOnRateLimit: true
+                        }
+                    );
+                    
+                    try {
+                        await connection.confirmTransaction(signature.signature, 'confirmed');
+                        setStatus(`Swap successful! Transaction confirmed: ${signature.signature.slice(0, 8)}...`);
+                    } catch (wsError) {
+                        console.log('Using polling confirmation method');
+                        
+                        let confirmed = false;
+                        let attempts = 0;
+                        const maxAttempts = 30;
+                        
+                        while (!confirmed && attempts < maxAttempts) {
+                            try {
+                                const status = await connection.getSignatureStatus(signature.signature);
+                                if (status.value && (status.value.confirmationStatus === 'confirmed' || status.value.confirmationStatus === 'finalized')) {
+                                    confirmed = true;
+                                    setStatus(`Swap successful! Transaction confirmed: ${signature.signature.slice(0, 8)}...`);
+                                    break;
+                                }
+                            } catch (e) {
+                                console.log('Checking confirmation...', attempts + 1);
+                            }
+                            
+                            attempts++;
+                            setStatus(`Confirming transaction... (${attempts}/${maxAttempts})`);
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                        }
+                        
+                        if (!confirmed) {
+                            setStatus(`Transaction submitted but confirmation timeout. Check: https://solscan.io/tx/${signature.signature}`);
+                        }
+                    }
+                    
+                    setStatus(`Swap successful! Transaction: ${signature.signature}`);
+                    await getTokenBalances(wallet);
+                    setFromAmount('');
+                    setToAmount('');
+                    
+                    console.log(`View on Solscan: https://solscan.io/tx/${signature.signature}`);
+                    
+                } catch (error) {
+                    console.error('Swap error:', error);
+                    if (error.message?.includes('User rejected')) {
+                        setStatus('Transaction cancelled by user');
+                    } else {
+                        setStatus(`Swap failed: ${error.message}`);
+                    }
+                } finally {
+                    setIsSwapping(false);
+                }
+            };
+
+            const switchTokens = () => {
+                const tempToken = fromToken;
+                setFromToken(toToken);
+                setToToken(tempToken);
+                setFromAmount(toAmount);
+                setToAmount(fromAmount);
+            };
+
+            const fromUSDValue = getUSDValue(fromToken.symbol, fromAmount);
+            const toUSDValue = getUSDValue(toToken.symbol, toAmount);
+
+            return (
+                <div className="max-w-md w-full">
+                    <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold text-cosmic-bright mb-2">
+                            <i className="fas fa-exchange-alt mr-3"></i>
+                            Swap Interface
+                        </h2>
+                        <p className="text-cosmic-accent">Real-time market prices • Powered by Jupiter</p>
+                    </div>
+
+                    <div className="swap-container rounded-2xl p-6 shadow-2xl">
+                        
+                        <WalletConnection />
+
+                        {wallet && (
+                            <>
+                                {/* Real-time price ticker */}
+                                <div className="balance-card rounded-xl p-4 mb-6">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="text-center">
+                                            <div className="flex items-center justify-center mb-1">
+                                                <img 
+                                                    src={TOKENS.SOL.logoURI} 
+                                                    alt="SOL"
+                                                    className="w-4 h-4 rounded-full mr-1"
+                                                />
+                                                <span className="text-cosmic-accent text-sm font-semibold">SOL</span>
+                                            </div>
+                                            <PriceDisplay symbol="SOL" showChange={true} className="text-sm" />
+                                            <p className="text-cosmic-bright text-sm font-bold mt-1">
+                                                {getCurrentBalance('SOL')}
+                                            </p>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="flex items-center justify-center mb-1">
+                                                <img 
+                                                    src={TOKENS.USDC.logoURI} 
+                                                    alt="USDC"
+                                                    className="w-4 h-4 rounded-full mr-1"
+                                                />
+                                                <span className="text-cosmic-accent text-sm font-semibold">USDC</span>
+                                            </div>
+                                            <PriceDisplay symbol="USDC" showChange={true} className="text-sm" />
+                                            <p className="text-cosmic-bright text-sm font-bold mt-1">
+                                                {getCurrentBalance('USDC')}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* From token */}
+                                <div className="mb-4">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-cosmic text-sm">From</span>
+                                        <span className="text-cosmic-accent text-xs">
+                                            Balance: {getCurrentBalance(fromToken.symbol)}
+                                        </span>
+                                    </div>
+                                    <div className="token-select rounded-xl p-4">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <img 
+                                                    src={fromToken.logoURI} 
+                                                    alt={fromToken.symbol}
+                                                    className="w-8 h-8 rounded-full mr-3"
+                                                />
+                                                <div>
+                                                    <p className="text-cosmic-bright font-semibold">{fromToken.symbol}</p>
+                                                    <PriceDisplay symbol={fromToken.symbol} showChange={false} className="text-xs" />
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <input
+                                                    type="number"
+                                                    value={fromAmount}
+                                                    onChange={(e) => setFromAmount(e.target.value)}
+                                                    placeholder="0.0"
+                                                    className="bg-transparent text-cosmic-bright text-right text-xl font-semibold 
+                                                             outline-none placeholder-gray-500 w-32"
+                                                />
+                                                {fromUSDValue > 0 && (
+                                                    <p className="text-cosmic-accent text-xs">
+                                                        ~${fromUSDValue.toFixed(2)}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Switch button */}
+                                <div className="flex justify-center mb-4">
+                                    <button
+                                        onClick={switchTokens}
+                                        className="p-2 bg-gray-700 hover:bg-gray-600 text-cosmic-bright rounded-full 
+                                                 transition-all duration-300 transform hover:rotate-180 border border-cosmic-accent"
+                                    >
+                                        <i className="fas fa-exchange-alt"></i>
+                                    </button>
+                                </div>
+
+                                {/* To token */}
+                                <div className="mb-6">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-cosmic text-sm">To</span>
+                                        <span className="text-cosmic-accent text-xs">
+                                            Market Rate: {prices[fromToken.symbol] && prices[toToken.symbol] ? 
+                                                `1 ${fromToken.symbol} = ${getExchangeRate(fromToken.symbol, toToken.symbol).toFixed(4)} ${toToken.symbol}` 
+                                                : '--'
+                                            }
+                                        </span>
+                                    </div>
+                                    <div className="token-select rounded-xl p-4">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <img 
+                                                    src={toToken.logoURI} 
+                                                    alt={toToken.symbol}
+                                                    className="w-8 h-8 rounded-full mr-3"
+                                                />
+                                                <div>
+                                                    <p className="text-cosmic-bright font-semibold">{toToken.symbol}</p>
+                                                    <PriceDisplay symbol={toToken.symbol} showChange={false} className="text-xs" />
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-cosmic-bright text-xl font-semibold">
+                                                    {isSimulating ? (
+                                                        <i className="fas fa-spinner fa-spin text-cosmic-accent"></i>
+                                                    ) : (
+                                                        toAmount || '0.0'
+                                                    )}
+                                                </p>
+                                                {toUSDValue > 0 && (
+                                                    <p className="text-cosmic-accent text-xs">
+                                                        ~${toUSDValue.toFixed(2)}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Slippage settings */}
+                                <div className="mb-6">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-cosmic text-sm">Slippage Tolerance</span>
+                                    </div>
+                                    <div className="flex space-x-2">
+                                        {[0.1, 0.5, 1.0].map((value) => (
+                                            <button
+                                                key={value}
+                                                onClick={() => setSlippage(value)}
+                                                className={`slippage-button px-3 py-1 rounded-lg text-sm transition-all ${
+                                                    slippage === value
+                                                        ? 'bg-purple-600 text-cosmic-bright border-purple-400'
+                                                        : 'bg-gray-700 text-cosmic hover:bg-gray-600'
+                                                }`}
+                                            >
+                                                {value}%
+                                            </button>
+                                        ))}
+                                        <input
+                                            type="number"
+                                            value={slippage}
+                                            onChange={(e) => setSlippage(parseFloat(e.target.value) || 0.5)}
+                                            className="flex-1 px-2 py-1 bg-gray-700 text-cosmic-bright rounded-lg text-sm outline-none
+                                                     border border-cosmic-accent focus:border-blue-400"
+                                            step="0.1"
+                                            min="0.1"
+                                            max="50"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Action buttons */}
+                                <div className="space-y-3">
+                                    <button
+                                        onClick={simulateSwap}
+                                        disabled={!fromAmount || isSimulating}
+                                        className="simulate-button w-full px-6 py-4 disabled:bg-gray-600 
+                                                 text-cosmic-bright font-semibold rounded-xl transition-all duration-300
+                                                 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                                    >
+                                        {isSimulating ? (
+                                            <>
+                                                <i className="fas fa-spinner fa-spin mr-2"></i>
+                                                Getting Quote...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="fas fa-refresh mr-2"></i>
+                                                Get Jupiter Quote
+                                            </>
+                                        )}
+                                    </button>
+
+                                    <button
+                                        onClick={executeSwap}
+                                        disabled={!fromAmount || !toAmount || isSwapping}
+                                        className="swap-button w-full px-6 py-4 text-cosmic-bright font-semibold rounded-xl"
+                                    >
+                                        {isSwapping ? (
+                                            <>
+                                                <i className="fas fa-spinner fa-spin mr-2"></i>
+                                                Swapping...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="fas fa-rocket mr-2"></i>
+                                                Execute Swap
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </>
+                        )}
+
+                        <StatusDisplay />
+                    </div>
+
+                    <div className="text-center mt-6">
+                        <p className="text-cosmic text-xs">
+                            Real-time prices • Market rates update every 30 seconds
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Pools Section Component
+        function PoolsSection() {
+            return (
+                <div className="max-w-4xl w-full">
+                    <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold text-cosmic-bright mb-2">
+                            <i className="fas fa-swimming-pool mr-3"></i>
+                            Liquidity Pools
+                        </h2>
+                        <p className="text-cosmic-accent">Provide liquidity and earn rewards</p>
+                    </div>
+
+                    <WalletConnection />
+
+                    <div className="glass-effect rounded-2xl p-8 text-center">
+                        <div className="mb-6">
+                            <i className="fas fa-tools text-6xl text-cosmic-accent mb-4"></i>
+                            <h3 className="text-2xl text-cosmic-bright font-bold mb-2">Coming Soon</h3>
+                            <p className="text-cosmic">Liquidity pool management and yield farming features are currently in development.</p>
+                        </div>
+                        
+                        <div className="grid md:grid-cols-3 gap-4 mt-8">
+                            <div className="token-select rounded-xl p-4">
+                                <h4 className="text-cosmic-bright font-bold mb-2">Pool Creation</h4>
+                                <p className="text-cosmic text-sm">Create new liquidity pools for token pairs</p>
+                            </div>
+                            <div className="token-select rounded-xl p-4">
+                                <h4 className="text-cosmic-bright font-bold mb-2">Yield Farming</h4>
+                                <p className="text-cosmic text-sm">Stake LP tokens to earn additional rewards</p>
+                            </div>
+                            <div className="token-select rounded-xl p-4">
+                                <h4 className="text-cosmic-bright font-bold mb-2">Pool Analytics</h4>
+                                <p className="text-cosmic text-sm">Track performance and APY of your positions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <StatusDisplay />
+                </div>
+            );
+        }
+        
+        // News Section Component
+        function NewsSection() {
+            return (
+                <div className="max-w-4xl w-full">
+                    <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold text-cosmic-bright mb-2">
+                            <i className="fas fa-newspaper mr-3"></i>
+                            Solitics News
+                        </h2>
+                        <p className="text-cosmic-accent">Stay updated with the latest in Solana DeFi</p>
+                    </div>
+
+                    <WalletConnection />
+
+                    <div className="space-y-6">
+                        <div className="glass-effect rounded-2xl p-6">
+                            <div className="flex items-center mb-4">
+                                <i className="fas fa-microphone text-2xl text-purple-400 mr-3"></i>
+                                <div>
+                                    <h3 className="text-xl text-cosmic-bright font-bold">Solitics Podcast</h3>
+                                    <p className="text-cosmic-accent text-sm">Coming Soon</p>
+                                </div>
+                            </div>
+                            <p className="text-cosmic mb-4">
+                                Join us for weekly discussions about the latest developments in Solana DeFi, 
+                                featuring interviews with builders, analysts, and thought leaders in the space.
+                            </p>
+                            <button className="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-sm">
+                                <i className="fas fa-bell mr-2"></i>
+                                Notify Me When Available
+                            </button>
+                        </div>
+                        
+                        <div className="glass-effect rounded-2xl p-6">
+                            <h3 className="text-xl text-cosmic-bright font-bold mb-4">
+                                <i className="fas fa-chart-line mr-2"></i>
+                                Market Updates
+                            </h3>
+                            <div className="space-y-4">
+                                <div className="token-select rounded-xl p-4">
+                                    <h4 className="text-cosmic-bright font-semibold">Solana Ecosystem Growth</h4>
+                                    <p className="text-cosmic text-sm mt-1">TVL across Solana DeFi protocols continues to show strong growth...</p>
+                                    <p className="text-cosmic-accent text-xs mt-2">2 hours ago</p>
+                                </div>
+                                <div className="token-select rounded-xl p-4">
+                                    <h4 className="text-cosmic-bright font-semibold">Jupiter Integration Update</h4>
+                                    <p className="text-cosmic text-sm mt-1">New features and improved routing now available...</p>
+                                    <p className="text-cosmic-accent text-xs mt-2">1 day ago</p>
+                                </div>
+                                <div className="token-select rounded-xl p-4">
+                                    <h4 className="text-cosmic-bright font-semibold">DeFi Security Best Practices</h4>
+                                    <p className="text-cosmic text-sm mt-1">Essential security tips for Solana DeFi users...</p>
+                                    <p className="text-cosmic-accent text-xs mt-2">3 days ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <StatusDisplay />
+                </div>
+            );
+        }
+
+        // Mount the React app
+        const { createRoot } = ReactDOM;
+        const container = document.getElementById('root');
+        const root = createRoot(container);
+        
+        root.render(<App />);
+    </script>
+</body>
+</html>

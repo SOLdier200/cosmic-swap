@@ -1,0 +1,42 @@
+{
+  "name": "solana-jupiter-swap-cosmic",
+  "version": "1.0.0",
+  "description": "Solana token swap using Jupiter API with cosmic space-themed Web UI",
+  "main": "server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node server.js",
+    "dev": "ts-node src/index.ts",
+    "swap": "ts-node src/index.ts",
+    "ui": "node server.js",
+    "web": "node server.js"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
+    "@raydium-io/raydium-sdk": "^1.3.1-beta.58",
+    "@solana/spl-token": "^0.4.1",
+    "@solana/web3.js": "^1.98.0",
+    "axios": "^1.6.0",
+    "bn.js": "^5.2.1",
+    "bs58": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.1",
+    "@types/bs58": "^4.0.1",
+    "@types/node": "^20.11.30"
+  },
+  "keywords": [
+    "solana",
+    "raydium",
+    "defi",
+    "swap",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT"
+}
