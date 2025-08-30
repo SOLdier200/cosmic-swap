@@ -20,6 +20,15 @@ importers:
       '@solana/web3.js':
         specifier: ^1.98.0
         version: 1.98.4(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)
+      '@types/bn.js':
+        specifier: ^5.1.1
+        version: 5.2.0
+      '@types/bs58':
+        specifier: ^4.0.1
+        version: 4.0.4
+      '@types/node':
+        specifier: ^20.11.30
+        version: 20.19.11
       axios:
         specifier: ^1.6.0
         version: 1.11.0
@@ -44,16 +53,6 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.9.2
-    devDependencies:
-      '@types/bn.js':
-        specifier: ^5.1.1
-        version: 5.2.0
-      '@types/bs58':
-        specifier: ^4.0.1
-        version: 4.0.4
-      '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.11
 
 packages:
 
